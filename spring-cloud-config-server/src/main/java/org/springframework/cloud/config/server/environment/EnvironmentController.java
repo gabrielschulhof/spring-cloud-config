@@ -48,6 +48,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.cloud.config.server.support.EnvironmentPropertySource.OutputFormat;
+
 import static org.springframework.cloud.config.server.support.EnvironmentPropertySource.prepareEnvironment;
 import static org.springframework.cloud.config.server.support.EnvironmentPropertySource.resolvePlaceholders;
 import static org.springframework.cloud.config.server.support.PathUtils.isInvalidEncodedLocation;
@@ -201,7 +203,7 @@ public class EnvironmentController {
 		Map<String, Object> properties = convertToMap(environment);
 		String json = this.objectMapper.writeValueAsString(properties);
 		if (resolvePlaceholders) {
-			json = resolvePlaceholders(prepareEnvironment(environment), json);
+			json = resolvePlaceholders(prepareEnvironment(environment), json, OutputFormat.JSON);
 		}
 		return getSuccess(json, MediaType.APPLICATION_JSON);
 	}
@@ -242,7 +244,7 @@ public class EnvironmentController {
 		String yaml = new Yaml().dumpAsMap(result);
 
 		if (resolvePlaceholders) {
-			yaml = resolvePlaceholders(prepareEnvironment(environment), yaml);
+			yaml = resolvePlaceholders(prepareEnvironment(environment), yaml, OutputFormat.YAML);
 		}
 
 		return getSuccess(yaml);
